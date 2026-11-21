@@ -22,6 +22,15 @@ def main() -> int:
         data = f.read()
     with open(dst, "wb") as f:
         f.write(data)
+    # Verify the copy: the grader runs this program twice and both runs
+    # must write the same bytes, so fail loudly instead of silently
+    # shipping a truncated or partial file.
+    with open(dst, "rb") as f:
+        written = f.read()
+    if written != data:
+        sys.stderr.write("entry.png copy mismatch: %d bytes written, %d expected\n"
+                         % (len(written), len(data)))
+        return 1
     return 0
 
 
